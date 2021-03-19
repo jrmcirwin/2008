@@ -1,0 +1,472 @@
+---
+title: 'The 2008 Food Crisis in Senegal'
+subtitle: "a mixed methods approach (someday)"
+author: "Jesse McDevitt-Irwin"
+output:
+  xaringan::moon_reader:
+    css: ["default", "rladies", "rladies-fonts"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+bibliography: ["/home/friend/Research/Bib/bib_big.bib"]
+biblio-style: "apalike"
+--- 
+
+```{css, echo=FALSE}
+blockquote {
+  background: #f9f9f9;
+  border-left: 5px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 1.5em;
+}
+
+li{
+  margin: 15px 0;
+}
+```
+
+
+
+```{r, load_refs, echo=FALSE}
+library(RefManageR)
+BibOptions(
+  check.entries = FALSE, 
+  bib.style = "authoryear", 
+  cite.style = "authoryear", 
+  style = "markdown",
+  hyperlink = FALSE, 
+  dashed = FALSE)
+bib = ReadBib("2008.bib")
+
+
+```
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, warning=FALSE,comments=FALSE, cache=TRUE,
+  fig.retina = 6, fig.height = 6, fig.width=8, out.width="100%"
+)
+library(tidyverse)
+load("~/Research/Data/Prices/Senegal/combined_prices_2007_20.Rdata")
+price <- price %>% 
+  filter((Region=="Dakar"|Region=="World")&Crop=="Rice")
+load("~/Research/Data/Prices/fao/real_clean.Rdata")
+prod <- read_csv("~/Research/Data/Prices/sen_rice_prod.csv")
+```
+## My goal today
+
+Introduce: 
+* A broad area of interest;
+* A specific research project.
+
+--
+
+```{r, out.width = "100%"}
+knitr::include_graphics("/home/friend/Images/tenor.gif")
+```
+
+
+---
+
+class: center,middle 
+
+# Background
+
+---
+
+```{r}
+fao %>% filter(Crop == "Cereals") %>% mutate(date = paste0(Date,"-01")) %>% 
+  mutate(date = as.Date(date,
+         format = "%Y-%m-%d")) %>% 
+  ggplot(aes(x=date,y=Price))+geom_path()+
+  labs(title = "FAO Cereal Price Index: 1990-2020 monthly",
+       x = "Month: Jan 1990 = 1",
+       y = "FAO Cereal Price Index")
+
+```
+
+---
+
+## The Case of Senegal
+
+Senegal:
+
+* Small, relatively open economy;
+* Large urban center of Dakar;
+* Horticulture and irrigated rice near the coast;
+* Hinterland producing rainfed groundnuts, maize and local cereals.
+
+--
+
+Of interest for this project because:
+
+* Imports much of its food supply;
+* 50% urban, whose majority of calories come from rice; and,
+* Broader issue of vulnerability to climate change vs market shocks.
+
+--
+
+And has the right data.
+
+---
+
+```{r  dakar time-series}
+load("~/Research/MA Thesis/Anemia/data/price_time_series.Rdata")
+prices <- prices %>% mutate(Date = as.Date(DATE,format = "%Y-%m-%d"), Region = City) %>% filter(Date<"2015-01-01")
+
+ggplot(filter(prices, City=="World"|City=="Dakar"), aes(x=DATE, y=Price, color= Region))+geom_path()+ theme(legend.title=element_text())+
+labs(title = "World and Dakar Prices of Rice: 2007-2020", x ="Year", y= "Price: USD/kg", caption = "Data from the FAO.")
+```
+
+---
+
+
+## Rice Prices
+
+<div id='widget-8091864080'></div>
+<script type='text/javascript' language='javascript'>
+var node = document.createElement('IFRAME');
+var width = 840;
+var height = 400;
+node.async = 'true';
+node.width = width + 'px';
+node.height = height + 'px';
+node.frameBorder = '0';
+node.scrolling = 'NO';
+node.src = '';
+var src='https://fpma.apps.fao.org/giews/food-prices/tool/api/v1/widgets/chart/ts?url=/SEN/MKT001/100610_2/retail/monthly/XOF/5/usd/kg/%23E91E63/Senegal/empty/empty/empty/empty/0&url=/KHM/MKT001/1006_38/wholesale/monthly/KHR/5/usd/kg/%23673AB7/Cambodia/empty/empty/empty/empty/0&url=/XXX/MKT029/CMM100600/export/monthly/USD/7/usd/kg/%232196F3/INTERNATIONAL%20PRICES/empty/empty/empty/empty/0&title=&subtitle=&width=840&height=400&axisfontsize=12&periodicity=monthly&utcstartdate=1111278178723.4043&utcenddate=1431025889361.7021&y0label=USD%2Fkg&y1label=&enableLegend=true&enableFromto=true&labelpoweredby=Powered by&permalink=https%3A%2F%2Ffpma.apps.fao.org%2Fgiews%2Ffood-prices%2Ftool%2Fpublic%2F%23%2Fdataset%2Finternational%3Fdomestic%3D23_5_153_2_1061%2C35_5_537_4_39%26international%3D209_7_711_1_943%26opt%3Dmonthly_usd_kg%26tab%3Dchart-tab%26lang%3Den%26utcstartdate%3D1111278178723.4043%26utcenddate%3D1431025889361.7021%26btnZoomSelector%3Dnull&poweredby=FAO GIEWS FPMA Tool&lang=en';
+window.document.getElementById('widget-8091864080').appendChild(node);node.src = src;</script>
+
+---
+
+```{r}
+prod %>% 
+  ggplot(aes(x=Year,y=`Rice Production`))+geom_bar(stat="identity")+geom_vline(xintercept=2008)+
+  labs(title = "Rice Production in Senegal: 1960-2020",
+       x= "Year",
+       y= "Rice Production (1000 MT)")
+```
+
+---
+
+class: center,middle 
+
+# Motivation
+
+---
+class: center,middle 
+
+<br>
+
+<blockquote>
+The phase of economic development after the emergence of a large class of wage labourers but before the development of social security arrangements is potentially a deeply vulnerable one.  <hr> Amartya Sen, 1981:173.
+</blockquote>
+
+---
+
+## Existing work
+
+* Anthropologists, journalists and researchers in food-policy and nutrition have no hesitation recognizing:
+	- Large, negative effects of the 2008 price increase;
+* Economists: 
+
+
+--
+
+```{r, out.width = "90%"}
+knitr::include_graphics("/home/friend/Images/ld.gif")
+```
+
+---
+
+## Existing work
+
+* Economists:
+	- The _net_ effects on poverty seem to have been small (urban loss offset by rural gain) (Akshay et. al. 2008; Dimova et. al. 2012);
+* Limited causal evidence on health effects due universal nature of exposure.
+
+
+```{r, out.width = "100%"}
+knitr::include_graphics("/home/friend/Images/dimova.png")
+```
+
+---
+
+
+## Contribution
+
+* First well-identified (🤞) estimates of health effects from 2008 crisis;
+* Implicit evidence of long-term damage to cognitive development.
+
+--
+
+## Why I like it
+
+
+1. Income effects of the 2008 crisis are smaller welfare effects because of credit constraints-- health is a better measure!
+2. Price-based crises are of increasing importance due to:
+	- Demographic transition;
+	- Agrarian transition.
+3. Opportunity to bridge two schools of thought:
+	- Agrarian political economy (based on class analysis); and,
+	- Deaton-style household economics (based on consumer theory).
+
+
+
+---
+class: center,middle 
+
+# Theory
+
+---
+
+## Effect of Food Price Shock 
+
+Two, opposing effects of an increase in food prices:
+	
+1. Decrease in purchasing power for _buying_ food;
+2. Increase in revenue from _selling_ food.
+
+Net-effect depends on the net position of the household (Deaton, 1997).
+
+
+---
+
+## Deaton Curve
+
+```{r}
+#Here I will use a whiteboard, draw curve, discuss different societies.
+#discuss climate change mainly affecting right hand side
+#agrarian transition is perhaps good news for climate change impacts, but brings new forms of vulnerability
+```
+
+---
+
+.pull-left[
+## Agrarian Transition
+
+* Commodification of agriculture;
+* Shift from subsistence to commercial production;
+
+## Demographic Transition
+
+* Death rates decrease faster than fertility;
+* Leads to demographic "bulge";
+* Rural population growth generally leads to:
+	- Agricultural intensification;
+	- Reduction in land-per-person; and,
+	- Rural-to-urban migration.
+]
+
+.pull-right[
+```{r,out.width="100%"}
+knitr::include_graphics("/home/friend/Images/enclosure.jpg")
+```
+<br>
+<br>
+
+```{r,out.width="100%"}
+knitr::include_graphics("/home/friend/Images/dem_tran.png")
+```
+]
+
+```{r}
+#Here I will use a whiteboard, draw figure of venn diagram, three types of vulnerabilty, four different classes
+```
+
+---
+
+---
+
+
+## Models of Development
+
+Within Senegal, tension between two models:
+
+1. Agricultural intensification + Urbanization:
+	- E.g. Large-scale rice farms increase production shedding labor.
+2. Labor-absorbing agro-ecology.
+
+Model (1) pushes the agrarian transition while (2) follows a different path.
+
+---
+
+## Credit Constraints
+
+Credit constraints:
+
+1. Prevent households from smoothing shocks across time;
+2. Making the optimized utility function function more concave;
+3. Imply that a gain for one household from a price shock is _less valuable_ than an equivalent the loss for another.
+
+---
+
+```{r}
+
+x <- data.frame(c(10:500)/300)
+colnames(x) <- "x"
+x$`Credit Constrained` <- log(x)+log(1)+10
+x$`Smoothed` <- 2*log(x/2 +.5)+10
+
+x %>% pivot_longer(cols = 2:3) %>% 
+ggplot(aes(x=x,y=value$x,color = name))+geom_path()+
+labs(x = "Income in Period 1", y= "Optimized Utility") + theme(legend.position = "none") 
+```
+
+
+---
+
+
+## Summary of Motivation
+
+* Severity of the 2008 crisis is debated in the literature;
+* Little direct evidence on physical well-being;
+* Credit constraints suggest that changes in income will not be equivalent to changes in well-being;
+* The ongoing agrarian and demographic transitions push subsistence farmers into the following classes (CIRAD 2017):
+	- commercial farming;
+	- agricultural laborers;
+	- urban laborers.
+* Each of which are more vulnerable to food price shocks than subsistence farmers.
+
+---
+
+
+class: center,middle 
+
+# Empirical Challenges
+
+---
+class: center,middle 
+
+<br>
+
+<blockquote>
+One objective of statistical modeling is to create an analogy, perhaps forced, between an observational study and an experiment.  <hr> David Freedman, 2007.
+</blockquote>
+
+---
+
+## Exposure and Insulation
+
+Problem: 
+
+* Everyone was exposed to the 2008 shock.
+
+Solution: 
+
+* Find a group who were _insulated_ in terms of a specific physiological process.
+
+I.e. find an infant bio-marker for maternal malnutrition.
+
+--
+
+Introducing infant hemoglobin!
+
+---
+
+## Exposure and Insulation
+
+For identification, two key points:
+
+1. Maternal iron nutrition determines fetal iron accumulation, which carries through to infancy (Camaschella, 2015);
+2. Infant iron accumulation is independent of maternal iron consumption, __during exclusive breastfeeding__.
+
+Hemoglobin is of particular interest because:
+
+* Iron is a critical nutrient in cognitive development (Lozoff and Georgieff, 2006);
+* Iron consumption depends on _quality_ of diet, as well as quantity.
+
+---
+
+```{r,out.width="100%"}
+knitr::include_graphics("/home/friend/Images/flow.jpg")
+```
+
+---
+
+## Data
+
+DHS Senegal: 
+
+* repeated cross-section, 2005,2008,2010, yearly from 2012-2019;
+*  2010 survey observes children born around the crisis around 2 years old;
+*  Household characteristics of interest:
+	-  Wealth index;
+	-  Urban/rural;
+	-  Land-ownership;
+	-  Location.
+
+---
+
+## Summary of Empirical Strategy
+
+* The effect of the 2008 crisis is difficult to identify because everyone was affected;
+* Infant hemoglobin depends on maternal nutrition during gestation, but not during breastfeeding;
+* Compare:
+	- Children born just before the crisis; to,
+	- Those *in-utero* during the crisis.
+* Adjust for age differences.
+
+
+---
+
+class: center,middle 
+
+# Interpretation
+
+---
+
+<blockquote>
+There is an obsession in the field of economics to obtain “causal  effects,”  even  if  the  effects  being  identified  are  without  social  significance  and/or economic meaning. 	<hr>	James Heckman, 2020.
+</blockquote>
+
+
+```{r,out.width="90%"}
+knitr::include_graphics("/home/friend/Images/streetlight.png")
+```
+
+---
+
+## Interpretation
+
+The effect of the 2008 crisis on maternal-infant health in Senegal:
+
+* Is not a structural parameter;
+* Has no external validity;
+* Is not the effect of a price increase;
+* Is one outcome of a diverse set of mechanisms behaviors and responses on the individual, household and social level:
+	- E.g. gender relations, food sharing, mutual aid, etc.
+
+--
+
+First step, heterogeneity of effect by:
+* Urban-rural;
+* Household wealth;
+* Land-ownership; and,
+* Region
+
+---
+
+## Future Research
+
+Integrating ethnographic evidence:
+* A rigorous version of "go talk to people";
+* E.g. oral histories of the 2008 crisis in Senegal.
+
+--
+
+In order to:
+
+* Characterize the broader phenomena, of which my empirical estimate is one aspect; and,
+* Enable interpretation of the results, and formation of new narratives and hypotheses.
+
+
+
+---
+
+## References
+
+
